@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: TorneosDeportivosUniversitarios
+
+  datasource:
+    url: "jdbc:postgresql://ep-fancy-wave-b7tjur6v-pooler.c-13.us-east-1.aws.neon.tech/neondb?sslmode=require"
+    username: neondb_owner
+    password: "npg_f7OuqwkjPHV5"
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  cache:
+    type: redis
+
+server:
+  port: 8080
