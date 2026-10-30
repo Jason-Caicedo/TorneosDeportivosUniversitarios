@@ -1,0 +1,71 @@
+### 1. Login ADMIN
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "email": "admin@uniajc.edu.co", "password": "Admin123*" }
+
+> {% client.global.set("admin", response.body.token); %}
+
+### 2. Registrar estudiante (publico)
+POST http://localhost:8080/api/auth/registro
+Content-Type: application/json
+
+{ "username": "jperez", "email": "jperez@uniajc.edu.co", "password": "Clave123*" }
+
+### 3. Login estudiante
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{ "email": "jperez@uniajc.edu.co", "password": "Clave123*" }
+
+> {% client.global.set("estudiante", response.body.token); %}
+
+### 4. Usuario autenticado
+GET http://localhost:8080/api/auth/me
+Authorization: Bearer {{estudiante}}
+
+### 5. Crear torneo como ESTUDIANTE -> 403
+POST http://localhost:8080/api/torneos
+Authorization: Bearer {{estudiante}}
+Content-Type: application/json
+
+{ "nombre": "Copa Interfacultades 2026", "disciplina": "Fútbol", "fechaInicio": "2026-11-10", "fechaFin": "2026-12-05" }
+
+### 6. Crear torneo como ADMIN -> 201
+POST http://localhost:8080/api/torneos
+Authorization: Bearer {{admin}}
+Content-Type: application/json
+
+{ "nombre": "Copa Interfacultades 2026", "disciplina": "Fútbol", "fechaInicio": "2026-11-10", "fechaFin": "2026-12-05" }
+
+> {% client.global.set("idTorneo", response.body.idTorneo); %}
+
+### 7. Disciplina invalida -> 400
+POST http://localhost:8080/api/torneos
+Authorization: Bearer {{admin}}
+Content-Type: application/json
+
+{ "nombre": "Torneo raro", "disciplina": "Quidditch", "fechaInicio": "2026-11-10", "fechaFin": "2026-12-05" }
+
+### 8. Listar torneos con filtros
+GET http://localhost:8080/api/torneos?disciplina=Fútbol&estado=PLANIFICADO
+Authorization: Bearer {{estudiante}}
+
+### 9. Iniciar torneo (ADMIN)
+PUT http://localhost:8080/api/torneos/{{idTorneo}}/iniciar
+Authorization: Bearer {{admin}}
+
+### 10. Iniciar otra vez -> 409
+PUT http://localhost:8080/api/torneos/{{idTorneo}}/iniciar
+Authorization: Bearer {{admin}}
+
+### 11. Cerrar torneo (ADMIN)
+PUT http://localhost:8080/api/torneos/{{idTorneo}}/cerrar
+Authorization: Bearer {{admin}}
+
+### 12. Roles (solo ADMIN)
+GET http://localhost:8080/api/roles
+Authorization: Bearer {{admin}}
+
+### 13. Sin token -> 401
+GET http://localhost:8080/api/torneos

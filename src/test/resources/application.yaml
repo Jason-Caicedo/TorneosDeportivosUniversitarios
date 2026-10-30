@@ -1,0 +1,22 @@
+# Configuracion SOLO para pruebas (mvn test): base de datos H2 en memoria.
+spring:
+  datasource:
+    url: jdbc:h2:mem:torneos;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  cache:
+    type: simple
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+jwt:
+  secret: "ClaveDePruebasParaJwtConMasDeTreintaYDosCaracteres123"
+  expiration-ms: 3600000

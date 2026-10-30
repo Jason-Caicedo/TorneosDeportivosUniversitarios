@@ -10,6 +10,7 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -17,13 +18,40 @@ spring:
       hibernate:
         format_sql: true
 
+  # Cache: "simple" = en memoria (no requiere instalar nada).
+  # Para usar Redis ejecutar con el perfil "redis" (ver application-redis.yaml).
+  cache:
+    type: simple
+
   data:
     redis:
-      host: localhost
-      port: 6379
+      repositories:
+        enabled: false
 
-  cache:
-    type: redis
+  jackson:
+    time-zone: America/Bogota
 
 server:
   port: 8080
+
+# ---------------- Seguridad JWT ----------------
+jwt:
+  # Minimo 32 caracteres (HS256)
+  secret: "TorneosUniajcClaveSecretaSuperSeguraYExtensaParaFirmarTokensJWT2026"
+  expiration-ms: 86400000   # 24 horas
+
+# Usuario administrador que se crea automaticamente al iniciar (DataInitializer)
+app:
+  admin:
+    username: admin
+    email: admin@uniajc.edu.co
+    password: "Admin123*"
+
+# ---------------- Swagger / OpenAPI ----------------
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
